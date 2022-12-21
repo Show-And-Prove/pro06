@@ -31,4 +31,8 @@ public class SampleController {
         return "sample/detail";
     }
 
+
+
+
+
 }

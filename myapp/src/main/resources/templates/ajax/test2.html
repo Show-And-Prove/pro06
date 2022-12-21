@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>jQuery 86 : jQuery ajax 데이터 송 수신 처리2 - GET</title>
+    <script src="https://code.jquery.com/jquery-latest.js"></script>
+</head>
+<body>
+  <section class="container">
+    <h2>jQuery Ajax 데이터 송 수신 메소드</h2>
+    <article class="data">
+      <div><h2>Ajax Data Trans</h2></div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>연번</th>
+            <th>아이디</th>
+            <th>비밀번호</th>
+          </tr>
+        </thead>
+        <tbody id="result">
+
+        </tbody>
+      </table>
+      <button type="button" id="btn1">회원 목록 불러오기</button><br>
+      <div id="msg"></div>
+    </article>
+  </section>
+  <script>
+    $(document).ready(function(){
+      $("#btn1").click(function(){
+        $.ajax({
+          url: "/ajax/userList.do",  //요청 데이터를 받아 처리하는 서버측 컨트롤러 혹은 페이지
+          //data: POST일때 사용
+          contentType: "application/json;charset=utf-8",  //인코딩
+          method: "GET",   //전송방식 : POST, GET, PUT
+          dataType: "json"  //반환받을 데이터 타입 - json, xml, script, html
+        })
+        .done(function(res){  //요청 처리에 대한 성공시 처리할 문장
+          console.log(res);
+          $.each(res, function(index, vaule){
+            var tr = "<tr>"
+            tr += "<td>" + (index+1) + "</td>"  //index는 0부터 시작함
+            tr += "<td>" + vaule['id'] + "</td>"
+            tr += "<td>" + vaule['pw'] + "</td>"
+            tr += "</tr>"
+            var list = tr;
+            $("#result").append(list);
+          });
+        })
+        .fail(function(xhr, status, errorThrown){
+          $("#msg").text("Error!!!");
+        });
+      });
+    });
+  </script>
+</body>
+</html>

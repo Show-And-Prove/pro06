@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>jQuery 87</title>
+</head>
+<script src="https://code.jquery.com/jquery-latest.js"></script>
+<body>
+  <section class="container">
+    <h2>jQuery Ajax 데이터 송 수신 메소드</h2>
+    <article class="data">
+      <div><h2>Ajax Data Trans</h2></div>
+      <fieldset id="loginForm">
+        <legend><h2>로그인</h2></legend>
+          <form id>
+            <input type="text" id="id" name="id" placeholder="아이디 입력" required><br>
+            <input type="password" name="pw" id="pw" placeholder="비밀번호 입력" required><br>
+            <button type="button" id="btn1">로그인</button><br>
+          </form>
+      </fieldset>
+      <div id="msg"></div>
+      <ul id="result"></ul>
+      <a href="/">메인으로</a>
+    </article>
+  </section>
+  <br><hr><br>
+  <script>
+    $(document).ready(function(){
+      $("#btn1").click(function(){
+        var userId = $("#id").val();
+        var userPw = $("#pw").val();
+        var user = {id: userId, pw: userPw};
+        $("#result").empty();
+        if(userId == "" || userPw == ""){
+          alert("아이디 또는 비밀번호가 입력되지않았습니다!!");
+          return false;
+        }
+
+        $.ajax({
+          url: "/ajax/getLogin.do?id="+userId+"&pw="+userPw,  //요청 데이터를 받아 처리하는 서버측 컨트롤러 혹은 페이지
+          contentType: "application/json;charset=utf-8",  //인코딩
+          method: "GET",   //전송방식 : POST, GET, PUT
+          dataType: "json"  //반환받을 데이터 타입 - json, xml, script, html
+        })
+        .done(function(res){  //요청 처리에 대한 성공시 처리할 문장
+          console.log(res);
+          $.each(res, function(key, value){ //
+            if(key == "id") { //
+              $("#result").append("<li>"+value+"님이 로그인하셨습니다.</li>");
+            }
+          });
+          $("#loginForm").fadeOut(300);
+        })
+        .fail(function(xhr, status, errorThrown){
+          $("#msg").text("ERROR!!" + xhr.status);
+        })
+        .always(function(xhr, status){
+
+        });
+      });
+    });
+  </script>
+</body>
+</html>

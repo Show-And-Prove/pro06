@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>jQuery 87</title>
+</head>
+<script src="https://code.jquery.com/jquery-latest.js"></script>
+<body>
+  <section class="container">
+    <h2>jQuery Ajax 데이터 송 수신 메소드</h2>
+    <article class="data">
+      <div><h2>Ajax Data Trans</h2></div>
+      <form>
+        <input type="text" id="id" name="id" placeholder="아이디 입력" required>
+        <input type="hidden" name="idck" id="idck" value="no">
+      </form>
+      <button type="button" id="btn1">회원정보불러오기</button><br>
+      <div id="msg"></div>
+      <ul id="result"></ul>
+    </article>
+  </section>
+  <br><hr><br>
+  <script>
+    $(document).ready(function(){
+      $("#btn1").click(function(){
+        var id = $("#id").val();
+        $("#result").empty();
+        if(id == ""){
+          alert("아이디가 입력되지 않았습니다!");
+          return false;
+        }
+        $.ajax({
+          url: "/ajax/getUser.do?id="+id,  //요청 데이터를 받아 처리하는 서버측 컨트롤러 혹은 페이지
+          contentType: "application/json;charset=utf-8",  //인코딩
+          method: "GET",   //전송방식 : POST, GET, PUT
+          dataType: "json"  //반환받을 데이터 타입 - json, xml, script, html
+        })
+        .done(function(res){  //요청 처리에 대한 성공시 처리할 문장
+          console.log(res);
+          $.each(res, function(key, value){
+            $("#result").append("<li>" + key + ":" + value + "</li>");
+          })
+        })
+        .fail(function(xhr, status, errorThrown){
+          $("#msg").text("ERROR!!" + xhr.status);
+        })
+        .always(function(xhr, status){
+
+        });
+      });
+    });
+  </script>
+</body>
+</html>
